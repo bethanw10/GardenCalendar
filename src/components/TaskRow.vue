@@ -1,8 +1,8 @@
 <template>
 	<div class="task" :style="blockStyle(section)">
 		<div class="month-span-controls">
-      <div class="add" :class="isPrevMonthOpen(task.sections, section.monthStart) ? 'clickable' : ''">
-        <div v-if="isPrevMonthOpen(task.sections, section.monthStart)" @click="addPrevMonth(task, section)"><i class="pi pi-angle-left"></i> </div>
+      <div class="add" :class="isPrevMonthOpen(row.sections, section.monthStart) ? 'clickable' : ''">
+        <div v-if="isPrevMonthOpen(row.sections, section.monthStart)" @click="addPrevMonth(row, section)"><i class="pi pi-angle-left"></i> </div>
       </div> 
       <div class="add" :class="section.monthStart != section.monthEnd ? 'clickable' : ''">
         <div v-if="section.monthStart != section.monthEnd" @click="removeStartMonth(section)"> <i class="pi pi-angle-right"></i> </div>
@@ -12,7 +12,7 @@
 		  <InputText class="task-note" size="small" v-model="section.note" />
       <div class="icon-panel">
         <i class="pi pi-pencil edit" @click="visible = true"></i>
-        <i class="pi pi-trash delete"@click="deleteSection(task, section)"></i>
+        <i class="pi pi-trash delete"@click="deleteSection(row, section)"></i>
         
         <Dialog v-model:visible="visible" maximizable modal header="Edit Task" class="edit-dialog" >
           <div class="dialog-content">
@@ -50,8 +50,8 @@
       </div>
     </div>
 		<div class="month-span-controls">
-      <div class="add" :class="isNextMonthOpen(task.sections, section.monthEnd) ? 'clickable' : ''">
-        <div v-if="isNextMonthOpen(task.sections, section.monthEnd)" @click="addNextMonth(task, section)"><i class="pi pi-angle-right"></i></div>
+      <div class="add" :class="isNextMonthOpen(row.sections, section.monthEnd) ? 'clickable' : ''">
+        <div v-if="isNextMonthOpen(row.sections, section.monthEnd)" @click="addNextMonth(row, section)"><i class="pi pi-angle-right"></i></div>
       </div> 
       <div class="add" :class="section.monthStart != section.monthEnd ? 'clickable' : ''" >
         <div v-if="section.monthStart != section.monthEnd" @click="removeEndMonth(section)"> <i class="pi pi-angle-left"></i> </div>
@@ -73,7 +73,7 @@ import Dialog from 'primevue/dialog';
 import Fieldset from 'primevue/fieldset';
 
 defineProps<{ 
-	task: Task;
+	row: Row;
 	section: Section;
 }>()
 
@@ -91,7 +91,10 @@ const presetColors : Ref<string[]> = ref([
   "#a5b4fc", "#818cf8", "#6366f1", "#4f46e5", "#4338ca", "#3730a3",
   "#d8b4fe", "#c084fc", "#a855f7", "#9333ea", "#7e22ce", "#581c87",
   "#cbd5e1", "#94a3b8", "#64748b", "#475569", "#334155", "#1e293b",
-
+  "#D2D0A0", "#9EBC8A", "#73946B", "#537D5D", "#426b4c", "#2e4f36",
+  "#cad2c5", "#b2bdac", "#84a98c", "#52796f", "#354f52", "#2f3e46",
+  "#e6ccb2", "#ddb892", "#b08968", "#9c7a5c", "#7f5539", "#63422d",
+  "#e76f51", "#f4a261", "#e9c46a", "#8ab17d", "#2a9d8f", "#264653"
 ]);
 
 function blockStyle(section: any) {
@@ -157,9 +160,9 @@ function isNextMonthOpen(sections: Section[], month: Month) : boolean {
   return !sections.some((section) => section.monthStart == month + 1);
 }
 
-function deleteSection(task: Task, section: Section) {
-  var index = task.sections.indexOf(section);
-  task.sections.splice(index, 1);
+function deleteSection(row: Row, section: Section) {
+  var index = row.sections.indexOf(section);
+  row.sections.splice(index, 1);
 }
 
 const colorOptions = {

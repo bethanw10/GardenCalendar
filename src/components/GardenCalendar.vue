@@ -25,23 +25,27 @@
       </div>
 
       <template v-for="(task, i) in store.calendar" :key="i">
-        <Textarea autoResize rows="1" style="resize: none" size="small" type="text" class="task-name" v-model="task.name" />
-
-        <template v-for="month in months" :key="month" >
-          <template v-if="!!sectionAtMonth(task, month)"  >
-            <TaskSection :section="sectionAtMonth(task, month)!" :task="task"/>
+        <div class="task-options" :style="taskNameStyle(task, i)">
+          <Textarea  autoResize rows="1" style="resize: none" size="small" type="text" class="task-name" v-model="task.name" />
+          <Button @click="newRow(task)" title="Add Row" text icon="pi pi-caret-down"></Button>
+        </div>
+        <template v-for="(row, j) in task.rows" :key="j">
+          <template v-for="month in months" :key="month" >
+            <template v-if="!!sectionAtMonth(row, month)"  >
+              <TaskSection :section="sectionAtMonth(row, month)" :row="row"/>
+            </template>
+            <div v-else-if="emptyMonth(row, month)" @click="newSection(row, month)" class="add-block">
+              <i class="pi pi-plus-circle add-task"></i>
+            </div>
           </template>
-          <div v-else-if="emptyMonth(task, month)" @click="newSection(task, month)" class="add-block">
-            <i class="pi pi-plus-circle add-task"></i>
-          </div>
+          <i class="pi pi-times delete-row" @click="deleteRow(task, row)"></i>
         </template>
 
-        <i class="pi pi-times delete-row" @click="deleteTask(task)"></i>
       </template>
     </div>
 
     <div class="add-row">
-      <Button @click="newRow" icon="pi pi-plus" severity="success"></Button>
+      <Button title="Add new section" @click="newTask" icon="pi pi-plus" severity="success"></Button>
     </div>
   </div>
   <MonthTaskList :tasks="store.calendar" />
@@ -104,34 +108,38 @@ function importCalendar() {
   try {
     store.import(importText.value);
     showImport.value = false;
-  } catch($e) {
+  } catch($e: any) {
     alert('Failed to import: ' + $e.message);
   }
 }
 
-function sectionAtMonth(task: Task, month: string) {
+function sectionAtMonth(row: Row, month: string) {
   var monthIndex = months.indexOf(month);
 
-  return task.sections.find((s) => s.monthStart == monthIndex);
+  return row.sections.find((s) => s.monthStart == monthIndex);
 }
 
-function emptyMonth(task: Task, month: string) {
+function emptyMonth(row: Row, month: string) {
   var monthIndex = months.indexOf(month);
 
-  return !task.sections.some((s) => s.monthStart <= monthIndex && s.monthEnd >= monthIndex);
+  return !row.sections.some((s) => s.monthStart <= monthIndex && s.monthEnd >= monthIndex);
 }
 
-function newRow() {
+function newTask() {
   store.calendar.push({
     name: "Untitled",
-    sections: []
+    rows: [ { sections: [] } ]
   });
 }
 
-function newSection(task: Task, month: string) {
+function newRow(task: Task) {
+  task.rows.push( { sections: [] });
+}
+
+function newSection(row: Row, month: string) {
   var monthIndex = months.indexOf(month);
 
-  task.sections.push({
+  row.sections.push({
       monthStart: monthIndex,
       monthEnd: monthIndex,
       color: "aaaaaa",
@@ -139,12 +147,33 @@ function newSection(task: Task, month: string) {
       description: ""
   });
 
-  task.sections.sort((a, b) => a.monthStart - b.monthStart);
+  row.sections.sort((a, b) => a.monthStart - b.monthStart);
 }
 
-function deleteTask(task: Task) {
-  var index = store.calendar.indexOf(task);
-  store.calendar.splice(index, 1);
+function deleteRow(task: Task, row: Row) {
+  if (task.rows.length == 1) {
+    var index = store.calendar.indexOf(task);
+    store.calendar.splice(index, 1);
+  } else {
+    var index = task.rows.indexOf(row);
+    task.rows.splice(index, 1)
+  }
+}
+
+function taskNameStyle(task: any) {
+  var index = 0;
+  for(var t of store.calendar) {
+    if (t == task) {
+      break;
+    }
+    
+    index += t.rows.length
+  }
+
+  var offset = 2;
+  return reactive({
+    'grid-row': `${index + offset}/${task.rows.length + index + offset}`
+  })
 }
 </script>
 
@@ -195,6 +224,11 @@ function deleteTask(task: Task) {
   position: sticky;
   left: 0;
   z-index: 1;
+}
+
+.task-options {
+  display: flex;
+  align-items: baseline;
 }
 
 .task-name {

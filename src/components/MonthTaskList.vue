@@ -12,8 +12,8 @@
         </div>
 		  </div>
 	    <div v-for="task in tasksForMonth(tasks, month)" 
-			:key="task.name" 
-			class="task-list-item" 
+          :key="task.name" 
+          class="task-list-item" 
 	        :style="{ borderLeft: '4px solid #' + sectionForMonth(task, month)!.color }" >
 	      <h3>{{ task.name }}</h3>
 	      <div v-if="!!sectionForMonth(task, month)" class="task-section" >
@@ -72,13 +72,14 @@ function jumpToThisMonth() {
 }
 
 function tasksForMonth(tasks: Task[], month: number) {
-  return tasks.filter((task) => task.sections.some((s) => 
+  return tasks.filter((task) => 
+    task.rows.flatMap(s => s.sections).some((s) => 
       s.monthStart <= month && 
       s.monthEnd >= month));
 }
 
 function sectionForMonth(task: Task, month: number) {
-  return task.sections.find((s) =>
+  return task.rows.flatMap(s => s.sections).find((s) =>
       s.monthStart <= month && 
       s.monthEnd >= month);
 }
