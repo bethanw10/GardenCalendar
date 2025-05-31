@@ -20,7 +20,7 @@
                 {{ monthRange(section, month) }}
               </Tag>
             </b>
-            <p class="description">{{section.description}}</p>
+            <p v-if="section.description" class="description">{{section.description}}</p>
           </div>
 	      </div>
 	    </div>
