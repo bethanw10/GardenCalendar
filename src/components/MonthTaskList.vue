@@ -51,8 +51,8 @@ const currentMonth = computed(() => {
 
 function monthRange(task: Task, month: number) {
   const section = sectionForMonth(task, month);
-  const startMonth = months.value[section!.monthStart];
-  const endMonth = months.value[section!.monthEnd];
+  const startMonth = months[section!.monthStart];
+  const endMonth = months[section!.monthEnd];
 
   return startMonth == endMonth
     ? startMonth 
@@ -60,11 +60,11 @@ function monthRange(task: Task, month: number) {
 }
 
 function prevMonth() {
-  month.value = (month.value - 1 + months.value.length) % months.value.length;
+  month.value = (month.value - 1 + months.length) % months.length;
 }
 
 function nextMonth() {
-  month.value =(month.value + 1) % months.value.length;
+  month.value =(month.value + 1) % months.length;
 }
 
 function jumpToThisMonth() {

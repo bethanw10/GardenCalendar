@@ -1,11 +1,28 @@
 <template>
   <div class="calendar">
     <div class="calendar-grid">
-      <div class="spacer"></div>
+      <div class="spacer"> </div>
       <div v-for="month in months" :key="month" class="month-header">
         <b>{{ month.toUpperCase() }}</b>
       </div>
-      <i class="pi delete-spacer" ></i>
+      <div class="options" >
+        <Button type="button" text icon="pi pi-ellipsis-v" @click="toggle" severity="secondary"  aria-haspopup="true" aria-controls="overlay_menu" ></Button>
+        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" ></Menu>
+        <Dialog v-model:visible="showImport" maximizable modal header="Import" class="edit-dialog" >
+          <Textarea v-model="importText" rows="10" cols="100" style="resize: none" ></Textarea>
+          <div class="export-buttons">
+            <Button label="Load" @click="importCalendar"></Button>
+            <Button label="Close" severity="secondary" @click="showImport = false"></Button>
+          </div>
+        </Dialog>
+        <Dialog v-model:visible="showExport" maximizable modal header="Export" class="edit-dialog" >
+          <Textarea :modelValue="store.calendarJson" readonly rows="10" cols="100" style="resize: none" ></Textarea>
+          <div class="export-buttons">
+            <Button label="Copy" @click="copyExport"></Button>
+            <Button label="Close" severity="secondary" @click="showExport = false"></Button>
+          </div>
+        </Dialog>
+      </div>
 
       <template v-for="(task, i) in store.calendar" :key="i">
         <Textarea autoResize rows="1" style="resize: none" size="small" type="text" class="task-name" v-model="task.name" />
@@ -37,43 +54,69 @@ import { Month, months } from "./Month"
 import TaskSection from './TaskRow.vue'
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
+import Menu from 'primevue/menu';
 import MonthTaskList from './MonthTaskList.vue'
 import { useCalendarStore } from '@/stores/Calendar'
 import Button from 'primevue/button';
-import type { vertical } from "@primeuix/themes/aura/divider";
+import Dialog from 'primevue/dialog';
 
 const store = useCalendarStore()
+const menu = ref()
+const showImport = ref(false)
+const showExport = ref(false)
+const importText = ref("")
+const items = computed(() => [
+{
+  
+  label: "Options",
+  items: [
+    {
+      label: 'Import',
+      icon: 'pi pi-download',
+      command: (e : any) => {
+        showImport.value = true;
+      },
+    },
+    {
+      label: 'Export',
+      icon: 'pi pi-upload',
+      command: (e : any) => {
+        showExport.value = true;
+      },
+    },
+  ],
+},
+])
 
-// const calendar : Ref<Task[]> = computed(() => {
-//   return store.calendar;
-// })
+const toggle = (event: any) => {
+  menu.value.toggle(event)
+}
 
+async function copyExport() {
+  try {
+      await navigator.clipboard.writeText(store.calendarJson);
+    } catch($e) {
+      alert('Cannot copy');
+  }
+}
 
-// const tasks : Ref<Task[]> = ref([
-//     {
-//       name: "Tomatoes",
-//       sections: [
-//         { note: "Prune", color: "add8e6", monthStart: Month.Jan, monthEnd: Month.Mar, description: "Prune prune prune" }, 
-//         { note: "Plant", color: "6a5acd", monthStart: Month.Apr, monthEnd: Month.Jun, description: "" }
-//       ]
-//     },
-//     {
-//       name: "Strawbs",
-//       description: "",
-//       sections: [
-//         { note: "Test", color: "ee82ee", monthStart: Month.Jan, monthEnd: Month.Dec, description: ""}
-//       ]
-//     }
-//   ]);
+function importCalendar() {
+  try {
+    store.import(importText.value);
+    showImport.value = false;
+  } catch($e) {
+    alert('Failed to import: ' + $e.message);
+  }
+}
 
 function sectionAtMonth(task: Task, month: string) {
-  var monthIndex = months.value.indexOf(month);
+  var monthIndex = months.indexOf(month);
 
   return task.sections.find((s) => s.monthStart == monthIndex);
 }
 
 function emptyMonth(task: Task, month: string) {
-  var monthIndex = months.value.indexOf(month);
+  var monthIndex = months.indexOf(month);
 
   return !task.sections.some((s) => s.monthStart <= monthIndex && s.monthEnd >= monthIndex);
 }
@@ -86,7 +129,7 @@ function newRow() {
 }
 
 function newSection(task: Task, month: string) {
-  var monthIndex = months.value.indexOf(month);
+  var monthIndex = months.indexOf(month);
 
   task.sections.push({
       monthStart: monthIndex,
@@ -168,11 +211,11 @@ function deleteTask(task: Task) {
   /* border-bottom: 1px solid #666; */
 }
 
-.delete-spacer {
-  width: 1em;
+.options {
+  width: 100%;
 }
 
-.delete-spacer, .delete-row {
+.delete-row {
   margin: 1.5em;
 }
 
@@ -206,5 +249,16 @@ function deleteTask(task: Task) {
 .add-button {
   font-family: "Roboto";
   --md-sys-color-primary: #191C1C;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+}
+
+.export-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
 }
 </style>
