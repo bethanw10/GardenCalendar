@@ -1,14 +1,14 @@
 <template>
-	<Dialog v-model:visible="visible" maximizable modal header="Edit Task" class="edit-dialog" >
+	<Dialog v-model:visible="visible" maximizable modal header="Edit Section" class="edit-dialog" @hide="close" >
 		<div class="dialog-content">
 			<div class="text-fields">
 				<IftaLabel>
-					<label for="task_name">Name</label>
-					<inputText id="task_name" v-model="section.note" placeholder="Task Name" />
+					<label for="section_name">Name</label>
+					<inputText id="section_name" v-model="task.note" placeholder="Section Name" />
 				</IftaLabel>
 				<IftaLabel>
-					<label for="task_description">Notes</label>
-					<Textarea id="task_description" autoResize v-model="section.description" placeholder="Notes" rows="3" cols="85" style="resize: none" ></Textarea>
+					<label for="section_description">Notes</label>
+					<Textarea id="section_description" autoResize v-model="task.description" placeholder="Notes" rows="3" cols="85" style="resize: none" ></Textarea>
 				</IftaLabel>
 			</div>
 
@@ -16,23 +16,23 @@
 				<div class="custom-color">
 					<p>Custom</p>
 					<div class="custom-inputs">
-						<ColorPicker :pt="colorOptions" class="color" v-model="section.color" ></ColorPicker>
+						<ColorPicker :pt="colorOptions" class="color" v-model="task.color" ></ColorPicker>
 						<InputGroup class="color-text">
 							<InputGroupAddon>#</InputGroupAddon>
-							<InputText autoResize size="medium" v-model="section.color"></InputText>
+							<InputText size="medium" v-model="task.color"></InputText>
 						</InputGroup>
 					</div>
 				</div>
 				<p>Presets</p>
 				<div class="colors">
 				<div class="color-grid">
-					<template v-for="presetColor in presetColors" :key="color" class="color" >
-					<div class="color-square" :style="{backgroundColor: presetColor}" @click="setColor(section, presetColor)"></div>
+					<template v-for="presetColor in presetColors" :key="presetColor" class="color" >
+					<div class="color-square" :style="{backgroundColor: presetColor}" @click="setColor(task, presetColor)"></div>
 					</template>
 				</div>
 				</div>
 			</Fieldset>
-			<Button type="submit" label="Done" @click="visible = false"></Button>
+			<Button type="submit" label="Done" @click="close()"></Button>
 		</div>
 	</Dialog>
 </template>
@@ -50,10 +50,11 @@ import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 
 defineProps<{ 
-	section: any;
+	task: any;
 }>()
 
-const visible = defineModel<any>('visible', { required: true });
+const visible = defineModel<boolean>('visible', { required: true });
+
 const presetColors : Ref<string[]> = ref([  
   "#fbcfe8", "#f9a8d4", "#f472b6", "#ec4899", "#db2777", "#be185d",
   "#fca5a5", "#f87171", "#ef4444", "#dc2626", "#b91c1c", "#991b1b",
@@ -73,8 +74,8 @@ const presetColors : Ref<string[]> = ref([
   "#e76f51", "#f4a261", "#e9c46a", "#8ab17d", "#2a9d8f", "#264653"
 ]);
 
-function setColor(section: Section, color: string) {
-  section.color = color.replace("#", "");
+function setColor(task: Task, color: string) {
+  task.color = color.replace("#", "");
 }
 
 const colorOptions = {
@@ -85,6 +86,10 @@ const colorOptions = {
     }
   })
 };
+
+function close() {
+	visible.value = false;
+}
 </script>
 
 <style>

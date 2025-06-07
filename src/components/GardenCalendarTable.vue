@@ -2,10 +2,9 @@
   <div class="calendar">
     <div class="calendar-grid">
       <div class="spacer"> </div>
-
       <div class="months">
-        <template v-for="month in monthNames" :key="month">
-          <b class="month-header">{{ month.toUpperCase() }}</b>
+        <template v-for="month in monthNames" :key="month" class="month-header">
+          <b>{{ month.toUpperCase() }}</b>
         </template>
       </div>
       <div class="options" >
@@ -114,7 +113,7 @@ function newSection() {
   align-items: center;
   background: white;
   margin: 1rem;
-  padding: 1rem;
+  padding: 1rem 0;
   border-radius: 8px;
 
   /* border: 1px solid #ccc; */
@@ -123,34 +122,16 @@ function newSection() {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: auto repeat(12, 15rem) auto;
+  grid-template-columns: auto repeat(12, 1fr) auto;
   grid-auto-rows: auto;
   grid-gap: 10px;
   text-align: center;
   align-items: center;
   width: 100%;
-  overflow: scroll;
-  height: 80vh;
 }
 
-.months {
-  display: grid;
-  grid-template-columns: repeat(12, 15rem);
-  grid-column: 2 / 14;
-  grid-gap: 10px;
-  top: 0;
-  position: sticky;
-  background: white;
-  z-index: 3;
-}
-
-.spacer {
-  height: 100%;
-  width: 100%;
-  top: 0;
-  position: sticky;
-  background: white;
-  z-index: 3;
+.calendar-grid:nth-child(1n){
+  background-color: palevioletred;
 }
 
 .month-header {
@@ -158,6 +139,21 @@ function newSection() {
   font-family: 'Raleway', sans-serif;
   font-size: 15px;
   font-weight: 200;
+  top: 0;
+  position: sticky;
+  background: white;
+  z-index: 2;
+  /* font-weight: 200; */
+  /* color: #195253; */
+}
+
+.spacer {
+  height: 100%;
+  width: 175px;
+  background: white;
+  position: sticky;
+  left: 0;
+  z-index: 1;
 }
 
 .options {

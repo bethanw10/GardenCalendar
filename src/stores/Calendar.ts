@@ -4,14 +4,18 @@ import { useStorage } from '@vueuse/core'
 export const useCalendarStore = defineStore({
   id: 'calendarPinia',
   state: () => ({
-    calendarState: useStorage('calendarStore', [] as Task[])
+    calendarState: useStorage('calendarStore', [] as Section[])
   }),
   getters: {
-    calendar(state): Task[] {
+    calendar(state): Section[] {
       return state.calendarState;
     },
     calendarJson(state): string {
       return JSON.stringify(state.calendarState);
+    },
+    distinctTagNames(state): string[] {
+      var tags = state.calendarState.flatMap(c => c.tags).map(t => t.name);
+      return [...new Set(tags)];
     }
   },
   actions: {

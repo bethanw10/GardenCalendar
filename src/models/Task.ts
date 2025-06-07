@@ -1,4 +1,4 @@
-interface Section {
+interface Task {
     color: string;
     note: string;
     description: string;
