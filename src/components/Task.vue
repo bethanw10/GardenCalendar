@@ -123,7 +123,7 @@ function deleteTask(row: Row, task: Task) {
   background: transparent;
   border: none;
   /* border-bottom: 2px solid #666; */
-  font-size: calc(0.7em + 1vmin);
+  font-size: 14px;
   font-family: 'Segoe UI';
   box-shadow: none;
   font-weight: 600;

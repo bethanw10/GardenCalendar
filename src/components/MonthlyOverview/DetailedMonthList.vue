@@ -1,8 +1,11 @@
 <template>
 	<div class="month-list">
-    <div v-for="section in sectionsForMonth(sections, month)" :key="section.name" >
+    <div v-for="(section, i) in sectionsForMonth(sections, month)" :key="section.name" >
+      <EditSectionDialog v-model:visible="visible[i]" :section="section"></EditSectionDialog>
+
       <h3>
         <span class="section-name">{{ section.name }} </span>
+        <i class="pi pi-pencil edit" @click="visible[i] = true"></i>
         <template v-if="section.tags.length > 0" class="tag-list">
           <template v-for="tag in section.tags">
             <Tag class="tag" :label="tag.name" severity="success" >{{ tag.name }}</Tag>
@@ -26,11 +29,10 @@
 
 <script setup lang="ts">
 import Tag from 'primevue/tag';
-import Button from 'primevue/button';
-import { Chip } from 'primevue';
-import EditSectionDialog from './EditSectionDialog.vue';
-import { monthNames } from '@/models/Month';
 import { ref, type Ref } from 'vue';
+import { monthRange, sectionsForMonth, taskForMonth } from './MonthList'
+import EditSectionDialog from '../EditSectionDialog.vue';
+
 const visible : Ref<boolean[]> = ref([])
 
 defineProps<{
@@ -38,27 +40,6 @@ defineProps<{
 	month: number;
 }>()
 
-function monthRange(task: Task) {
-  const startMonth = monthNames[task!.monthStart];
-  const endMonth = monthNames[task!.monthEnd];
-
-  return startMonth == endMonth
-    ? `(${startMonth})` 
-    : `(${startMonth} - ${endMonth})`;
-}
-
-function sectionsForMonth(sections: Section[], month: number) {
-  return sections.filter((section) => 
-    section.rows.flatMap(s => s.tasks).some((s) => 
-      s.monthStart <= month && 
-      s.monthEnd >= month));
-}
-
-function taskForMonth(section: Section, month: number) {
-  return section.rows.flatMap(s => s.tasks).filter((s) =>
-      s.monthStart <= month && 
-      s.monthEnd >= month);
-}
 </script>
 
 <style scoped>
@@ -71,7 +52,7 @@ h3 {
 }
 
 .section-name {
-  margin-right: 1em;
+  margin-right: 0.5em;
 }
 
 .section-list-header {
@@ -115,7 +96,9 @@ h3 {
   display: inline;
 }
 
-.tag {
-  /* background: var(--p-gray-500); */
+.edit {
+  margin-right: 1em;
+  color: var(--p-gray-400);
+  cursor: pointer;
 }
 </style>

@@ -1,11 +1,12 @@
-- Categories?
-- Scroll (change to table)
 - filter/sort
--let tasks span acrodd dec-jan
-allow editing from month list
-- printable - detailed/simple view
+- allow editing from month list
+- copy to clipboard OR text mode
 - modile friendly
 
 - MAYBE
-Host + accounts + database
-Drag!
+- switch between scroll and fit to screen at will
+- Host + accounts + database
+- Drag!
+-let tasks span acrossdec-jan
+- images
+- fix errors and warnings

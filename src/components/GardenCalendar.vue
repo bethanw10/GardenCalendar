@@ -1,15 +1,24 @@
 <template>
   <div class="calendar">
-    <div class="calendar-grid">
-      <div class="spacer"> </div>
+    <div class="calendar-grid" :class="expanded ? 'expanded' : ''">
+      <div class="spacer"> 
+        <Button type="button" icon="pi pi-cog" @click="toggleCalendarOptions" severity="secondary" size="large" aria-haspopup="true" aria-controls="overlay_menu" ></Button>
 
+        <!-- <Button rounded 
+          @click="expanded = !expanded" 
+          :icon="expanded ? 'pi pi-window-minimize': 'pi pi-window-maximize'"
+          :title="expanded ? 'Fit to screen': 'Expand'"
+          severity="secondary">
+        </Button> -->
+      </div>
       <div class="months">
         <template v-for="month in monthNames" :key="month">
           <b class="month-header">{{ month.toUpperCase() }}</b>
         </template>
       </div>
       <div class="options" >
-        <Button type="button" text icon="pi pi-ellipsis-v" @click="toggleCalendarOptions" severity="secondary"  aria-haspopup="true" aria-controls="overlay_menu" ></Button>
+        <!-- <Button type="button" text icon="pi pi-ellipsis-v" @click="toggleCalendarOptions" severity="secondary"  aria-haspopup="true" aria-controls="overlay_menu" ></Button> -->
+        
         <Menu ref="menu" id="overlay_menu" :model="calendarOptions" :popup="true" ></Menu>
         <Dialog v-model:visible="showImport" maximizable modal header="Import" class="edit-dialog" >
           <Textarea v-model="importText" rows="10" cols="100" style="resize: none" ></Textarea>
@@ -33,7 +42,7 @@
     </div>
 
     <div class="add-row">
-      <Button label="New Section" @click="newSection" icon="pi pi-plus" severity="success"></Button>
+      <Button label="New Section" @click="newSection" icon="pi pi-plus" severity="primary"></Button>
     </div>
   </div>
   <Overview :sections="store.calendar" />
@@ -49,19 +58,19 @@ import Textarea from 'primevue/textarea';
 import Menu from 'primevue/menu';
 import Button from 'primevue/button';
 import Section from './Section.vue'
-import Overview from "./MonthlyOverview.vue"
+import Overview from "./MonthlyOverview/MonthlyOverview.vue"
+import { useWindowSize } from '@vueuse/core'
 
+const { width } = useWindowSize()
 const store = useCalendarStore()
 const menu = ref()
 const showImport = ref(false)
 const showExport = ref(false)
+const expanded = ref(false)
 const importText = ref("")
 
-const calendarOptions = computed(() => [
-{
-  label: "Options",
-  items: [
-    {
+const calendarOptions = computed(() => {
+  var items = [{
       label: 'Import',
       icon: 'pi pi-download',
       command: (e : any) => {
@@ -74,9 +83,24 @@ const calendarOptions = computed(() => [
       command: (e : any) => {
         showExport.value = true;
       },
-    },
-  ],
-}])
+    }]
+
+  if (width.value > 1440) {
+    items.push({
+      label: expanded.value ? 'Fit to screen' : 'Expand',
+      icon: expanded.value ? 'pi pi-window-minimize': 'pi pi-window-maximize',
+      command: (e : any) => {
+        expanded.value = !expanded.value 
+      },
+    })
+  }
+
+  return [
+  {
+    label: "Options",
+    items: items
+  }]
+})
 
 const toggleCalendarOptions = (event: any) => { menu.value.toggle(event) }
 
@@ -118,24 +142,23 @@ function newSection() {
   border-radius: 8px;
 
   /* border: 1px solid #ccc; */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --fit-grid-columns: repeat(12, minmax(0, 1fr));
 }
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: auto repeat(12, 15rem) auto;
-  grid-auto-rows: auto;
+  grid-template-columns: minmax(auto, 10vw) var(--fit-grid-columns) auto;
   grid-gap: 10px;
   text-align: center;
   align-items: center;
   width: 100%;
-  overflow: scroll;
-  height: 80vh;
 }
 
 .months {
   display: grid;
-  grid-template-columns: repeat(12, 15rem);
+  grid-template-columns: var(--fit-grid-columns);
   grid-column: 2 / 14;
   grid-gap: 10px;
   top: 0;
@@ -144,13 +167,44 @@ function newSection() {
   z-index: 3;
 }
 
+@media only screen and (max-width: 1440px) {
+  .calendar-grid {
+    grid-template-columns: auto repeat(12, 10rem) auto;
+    overflow: scroll;
+    height: 80vh;
+  }
+
+  .months {
+    grid-template-columns: repeat(12, 10rem);
+  }
+
+  .spacer {
+    background: transparent !important; 
+  }
+}
+
+@media only screen and (max-width: 800) {
+  .calendar-grid {
+    grid-template-columns: auto repeat(12, 10rem) auto;
+  }
+}
+
+.calendar-grid.expanded {
+  grid-template-columns: auto repeat(12, max(10vw, 10rem)) auto;
+  overflow: scroll;
+  height: 80vh;
+}
+
 .spacer {
   height: 100%;
   width: 100%;
+  left: 0;
   top: 0;
   position: sticky;
   background: white;
-  z-index: 3;
+  z-index: 4;
+  display: flex;
+  justify-content: start;
 }
 
 .month-header {
@@ -162,6 +216,10 @@ function newSection() {
 
 .options {
   width: 100%;
+  top: 0;
+  position: sticky;
+  background: white;
+  z-index: 3;
 }
 
 .add-row {

@@ -16,14 +16,11 @@ export const useCalendarStore = defineStore({
     distinctTagNames(state): string[] {
       var tags = state.calendarState.flatMap(c => c.tags).map(t => t.name);
       return [...new Set(tags)];
-    }
+    },
   },
   actions: {
     import(json: string) {
       this.calendarState = JSON.parse(json)
-    },
-    test() { 
-      console.log("res")
     }
   }
 })

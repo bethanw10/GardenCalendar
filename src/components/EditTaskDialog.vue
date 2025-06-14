@@ -1,14 +1,14 @@
 <template>
-	<Dialog v-model:visible="visible" maximizable modal header="Edit Section" class="edit-dialog" @hide="close" >
+	<Dialog v-model:visible="visible" maximizable :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" modal header="Edit Section" class="edit-dialog" @hide="close" >
 		<div class="dialog-content">
 			<div class="text-fields">
 				<IftaLabel>
 					<label for="section_name">Name</label>
-					<inputText id="section_name" v-model="task.note" placeholder="Section Name" />
+					<inputText fluid id="section_name" v-model="task.note" placeholder="Section Name" />
 				</IftaLabel>
 				<IftaLabel>
 					<label for="section_description">Notes</label>
-					<Textarea id="section_description" autoResize v-model="task.description" placeholder="Notes" rows="3" cols="85" style="resize: none" ></Textarea>
+					<Textarea fluid id="section_description" autoResize v-model="task.description" placeholder="Notes" rows="3" style="resize: none" ></Textarea>
 				</IftaLabel>
 			</div>
 
@@ -117,8 +117,8 @@ function close() {
 
 .custom-inputs {
 	display: flex;
-    align-items: center;
-    gap: 1em;
+  align-items: center;
+  gap: 1em;
 }
 
 .colors {
@@ -132,10 +132,11 @@ function close() {
   grid-template-columns: repeat(24, auto);
 }
 
-.color-text {
-  /* border: 2px white solid; */
+@media only screen and (max-width: 800px) {
+  .color-grid {
+    grid-template-columns: repeat(12, auto);
+  }
 }
-
 .color-square {
   width: 26px;
   height: 26px;

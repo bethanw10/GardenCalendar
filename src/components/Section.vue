@@ -12,7 +12,7 @@
             <i class="pi pi-plus-circle add-section"></i>
         </div>
         </template>
-        <i class="pi pi-times delete-row" @click="deleteRow(section, row)"></i>
+        <i class="pi pi-trash delete-row" @click="deleteRow(section, row)"></i>
     </template>
 </template>
 
@@ -68,6 +68,13 @@ const sectionOptions = computed(() => [
         moveDown(props.section)
       },
     },
+    {
+      label: 'Delete',
+      icon: 'pi pi-trash',
+      command: (e : any) => {
+        deleteSection(props.section);
+      },
+    },
   ],
 }])
 
@@ -76,12 +83,16 @@ const toggleTaskOptions = (event: any, i: number) => { taskMenu.value.toggle(eve
 
 function deleteRow(section: Section, row: Row) {
   if (section.rows.length == 1) {
-    var index = store.calendar.indexOf(section);
-    store.calendar.splice(index, 1);
+    deleteSection(section)
   } else {
     var index = section.rows.indexOf(row);
     section.rows.splice(index, 1)
   }
+}
+
+function deleteSection(section: Section) {
+  var index = store.calendar.indexOf(section);
+  store.calendar.splice(index, 1);
 }
 
 function moveUp(section: Section) {
@@ -160,8 +171,7 @@ function emptyMonth(row: Row, month: string) {
   font-weight: 600;
   text-align: right;
   grid-column-start: 1;
-  font-size: calc(0.5em + 1vmin);
-  max-width: 15vw;
+  font-size: 14px;
   font-family: 'Montserrat', sans-serif;
   border: none;
   text-overflow: ellipsis;
@@ -170,6 +180,13 @@ function emptyMonth(row: Row, month: string) {
   position: sticky;
   left: 0;
   z-index: 1;
+}
+
+@media only screen and (max-width: 800px) {
+  .section-options {
+    position: relative;
+    font-size: calc(0.5em + 1vmin);
+  }
 }
 
 .add-section {
