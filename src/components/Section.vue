@@ -26,7 +26,7 @@ import Button from 'primevue/button';
 import { useCalendarStore } from '@/stores/Calendar';
 import { monthNames } from "../models/Month"
 
-import EditSectionDialog from './EditSectionDialog.vue'
+import EditSectionDialog from './Dialogs/EditSectionDialog.vue'
 
 const props = defineProps<{ 
     section: Section

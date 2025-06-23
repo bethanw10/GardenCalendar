@@ -1,6 +1,7 @@
 <template>
 	<div class="overview">
     <div class="header">
+      
       <div class="jump-button">
         <Button @click="jumpToThisMonth" :disabled="month == currentMonth" label="Today" size="small"  rounded title="Jump to this month"></Button>
       </div>
@@ -12,13 +13,14 @@
         <div @click="nextMonth()" class="month-arrow"><i class="pi pi-angle-right"></i></div>
       </div>
       <div class="menu-button">
-        <Button type="button" rounded icon="pi pi-ellipsis-v" @click="toggleCalendarOptions" severity="secondary" aria-haspopup="true" ></Button>
+        <Button type="button" size="large" icon="pi pi-cog" @click="toggleCalendarOptions" severity="secondary" aria-haspopup="true" ></Button>
         <Menu ref="menu" id="overlay_menu" :model="options" :popup="true" ></Menu>
       </div>
       
     </div>
-    <DetailedMonthList v-if="useDetailedView" :sections="sections" :month="month" />
-    <SimpleMonthList v-else :sections="sections" :month="month" />
+    <DetailedMonthList v-if="useDetailedView == 'Detailed'" :sections="sections" :month="month" />
+    <SimpleMonthList v-if="useDetailedView == 'Simple'" :sections="sections" :month="month" />
+    <TextMonthList v-if="useDetailedView == 'Text'" :sections="sections" :month="month" />
   </div>
 </template>
 
@@ -29,31 +31,46 @@ import Button from 'primevue/button';
 import SimpleMonthList from './SimpleMonthList.vue'
 import DetailedMonthList from './DetailedMonthList.vue';
 import Menu from 'primevue/menu';
+import TextMonthList from './TextMonthList.vue';
 
 const menu = ref()
 const month = ref(1)
-const useDetailedView = ref(true)
+const useDetailedView = ref("Detailed")
 
-const options = computed(() => [
-{
-  label: "Options",
-  items: [
-    {
-      label: 'Switch view',
-      icon: 'pi pi-arrow-right-arrow-left',
-      command: (e : any) => {
-        useDetailedView.value = !useDetailedView.value
-      },
+const options = computed(() => {
+  var viewItems = [
+  {
+    label: 'Simple view',
+    icon: 'pi pi-th-large',
+    disabled: useDetailedView.value == "Simple",
+    command: (e : any) => {
+      useDetailedView.value = "Simple"
     },
+  },
+  {
+    label: 'Detailed view',
+    icon: 'pi pi-list',
+    disabled: useDetailedView.value == "Detailed",
+    command: (e : any) => {
+      useDetailedView.value = "Detailed"
+    },
+  },
+  {
+    label: 'Text view',
+    icon: 'pi pi-align-left',
+    disabled: useDetailedView.value == "Text",
+    command: (e : any) => {
+      useDetailedView.value = "Text"
+    },
+  }]
+
+  return [
     {
-      label: 'Copy as plain text',
-      icon: 'pi pi-clipboard',
-      command: (e : any) => {
-        console.log(plainTextList())
-      },
-    }
-  ],
-}])
+      label: "View",
+      items: viewItems
+    }]
+})
+
 
 const toggleCalendarOptions = (event: any) => { menu.value.toggle(event) }
 
@@ -82,51 +99,19 @@ function jumpToThisMonth() {
   month.value = currentMonth.value;
 }
 
-function plainTextList() {
-  var text = "";
-
-  var sections = props.sections.filter((section) => 
-    section.rows.flatMap(s => s.tasks).some((s) => 
-      s.monthStart <= month.value && 
-      s.monthEnd >= month.value));
-
-  for (var section of sections) {
-    text += section.name + ':\n';
-
-    var tasks = section.rows.flatMap(s => s.tasks).filter((s) =>
-      s.monthStart <= month.value && 
-      s.monthEnd >= month.value);
-
-      for (var task of tasks) {
-        text += task.note + '\n'
-      }
-      
-      text += '\n'
-  }
-
-  return text;
-}
 </script>
 
 <style scoped>
 .overview {
-  padding: 0 5%;
-  
+  padding: 0 10%;
+  margin-bottom: 25vh;
 }
 
-@media only screen and (max-width: 1440px) {
-	.overview {
-		grid-template-columns: repeat(2, 1fr);
-		padding: 0 1rem;
-	}
+@media only screen and (max-width: 1400px) {
+  .overview {
+    padding: 0 5%;
+  }
 }
-
-@media only screen and (max-width: 800px) {
-	.overview {
-		grid-template-columns: repeat(1, 1fr);
-	}
-}
-
 
 .month-title {
   width: 3rem;

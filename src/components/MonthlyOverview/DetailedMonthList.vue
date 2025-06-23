@@ -1,6 +1,8 @@
 <template>
 	<div class="month-list">
-    <div v-for="(section, i) in sectionsForMonth(sections, month)" :key="section.name" >
+    <DisplayOptions class="options" v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" />
+
+    <div v-for="(section, i) in sectionsForMonth(sections, month, tagFilter, sortBy)" :key="section.name + i" >
       <EditSectionDialog v-model:visible="visible[i]" :section="section"></EditSectionDialog>
 
       <h3>
@@ -29,16 +31,29 @@
 
 <script setup lang="ts">
 import Tag from 'primevue/tag';
-import { ref, type Ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 import { monthRange, sectionsForMonth, taskForMonth } from './MonthList'
-import EditSectionDialog from '../EditSectionDialog.vue';
+import EditSectionDialog from '../Dialogs/EditSectionDialog.vue';
+import { MultiSelect, Select } from 'primevue';
+import { useCalendarStore } from '@/stores/Calendar';
+import FloatLabel from 'primevue/floatlabel';
+import DisplayOptions from './DisplayOptions.vue'
 
 const visible : Ref<boolean[]> = ref([])
+const sortBy = ref<string>("Calendar order")
+const tagFilter = ref<string[]>([])
+
+const store = useCalendarStore()
 
 defineProps<{
 	sections: Section[];
 	month: number;
 }>()
+
+const allTags = computed(() => {
+  return store.distinctTagNames;
+});
+
 
 </script>
 
@@ -47,8 +62,8 @@ h3 {
   font-family: 'Montserrat', sans-serif;
 }
 
-.month-list {
-  padding: 0 5%;
+.options {
+  margin-bottom: 2em;
 }
 
 .section-name {

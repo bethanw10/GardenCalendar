@@ -33,7 +33,7 @@
 import { reactive, ref, type Ref } from 'vue';
 import { Month } from '../models/Month';
 import InputText from 'primevue/inputtext';
-import EditTaskDialog from './EditTaskDialog.vue'
+import EditTaskDialog from './Dialogs/EditTaskDialog.vue'
 
 defineProps<{ 
 	row: Row;

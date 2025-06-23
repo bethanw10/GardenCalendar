@@ -2,7 +2,6 @@
   <div class="calendar">
     <div class="calendar-grid" :class="expanded ? 'expanded' : ''">
       <div class="spacer"> 
-        <Button type="button" icon="pi pi-cog" @click="toggleCalendarOptions" severity="secondary" size="large" aria-haspopup="true" aria-controls="overlay_menu" ></Button>
 
         <!-- <Button rounded 
           @click="expanded = !expanded" 
@@ -18,6 +17,7 @@
       </div>
       <div class="options" >
         <!-- <Button type="button" text icon="pi pi-ellipsis-v" @click="toggleCalendarOptions" severity="secondary"  aria-haspopup="true" aria-controls="overlay_menu" ></Button> -->
+        <Button type="button" icon="pi pi-cog" @click="toggleCalendarOptions" severity="secondary"  aria-haspopup="true" aria-controls="overlay_menu" ></Button>
         
         <Menu ref="menu" id="overlay_menu" :model="calendarOptions" :popup="true" ></Menu>
         <Dialog v-model:visible="showImport" maximizable modal header="Import" class="edit-dialog" >
@@ -152,7 +152,7 @@ function newSection() {
   grid-template-columns: minmax(auto, 10vw) var(--fit-grid-columns) auto;
   grid-gap: 10px;
   text-align: center;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
 }
 

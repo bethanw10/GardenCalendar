@@ -10,15 +10,22 @@ export function monthRange(task: Task) {
     : `(${startMonth} - ${endMonth})`;
 }
 
-export function sectionsForMonth(sections: Section[], month: number) {
-  return sections.filter((section) => 
+export function sectionsForMonth(sections: Section[], month: number, tagFilter: string[] = [], sortBy: string = "") {
+  var sections = sections.filter((section) => 
     section.rows.flatMap(s => s.tasks).some((s) => 
-      s.monthStart <= month && 
-      s.monthEnd >= month));
+      s.monthStart <= month &&
+      s.monthEnd >= month)
+    && (tagFilter.length == 0 || section.tags.some(t => tagFilter.includes(t.name))));
+
+    if (sortBy == "Alphabetically") {
+      sections.sort((a, b) => ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0)))
+    }
+
+    return sections;
 }
 
 export function taskForMonth(section: Section, month: number) {
   return section.rows.flatMap(s => s.tasks).filter((s) =>
-      s.monthStart <= month && 
+      s.monthStart <= month &&
       s.monthEnd >= month);
 }

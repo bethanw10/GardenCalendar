@@ -1,10 +1,13 @@
 <template>
+  <DisplayOptions class="options" v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" />
+
 	<div class="month-list">
-		<div class="section" v-for="(section, i) in sectionsForMonth(sections, month)" :key="section.name" >
+
+		<div class="section" v-for="(section, i) in sectionsForMonth(sections, month, tagFilter, sortBy)" :key="section.name + i" >
 			<Panel class="section-task" :header="section.name">
 				<template #header>
           <div class="header">
-            <div class="section-title">{{ section.name }}<i class="pi pi-pencil edit" @click="visible[i] = true"></i></div>
+            <div class="section-title">{{ section.name }}<Button size="small" rounded text severity="secondary" icon="pi pi-pencil edit" @click="visible[i] = true"></Button></div>
             <div v-if="section.tags.length > 0">
             <span class="tag-text">{{ tagText(section.tags) }}</span>
             </div>
@@ -29,13 +32,17 @@
 <script setup lang="ts">
 import Tag from 'primevue/tag';
 import { Panel } from 'primevue';
-import EditSectionDialog from '../EditSectionDialog.vue';
-import { ref, type Ref } from 'vue';
+import EditSectionDialog from '../Dialogs/EditSectionDialog.vue';
+import { onMounted, ref, type Ref } from 'vue';
 import { monthRange, sectionsForMonth, taskForMonth } from './MonthList'
+import DisplayOptions from './DisplayOptions.vue'
+import Button from 'primevue/button';
 
 const visible : Ref<boolean[]> = ref([])
+const sortBy = ref<string>("Calendar order")
+const tagFilter = ref<string[]>([])
 
-defineProps<{
+let props = defineProps<{
 	sections: Section[];
 	month: number;
 }>()
@@ -43,6 +50,12 @@ defineProps<{
 function tagText(tags: Tag[]) {
   return tags.map(t => t.name).join(", ")
 }
+
+onMounted(() => {
+  for (let i = 0; i < props.sections.length; i++) {
+    visible.value[i] == false;
+  }
+})
 </script>
 
 <style scoped>
@@ -53,6 +66,11 @@ h3 {
 .header {
   width: 100%;
 }
+
+.options {
+  margin-bottom: 2em;
+}
+
 
 .section-title {
   display: flex;
@@ -70,11 +88,23 @@ h3 {
 .month-list {
   /* display: flex; */
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1em;
   width: 100%;
   flex-wrap: wrap;
   margin-bottom: 30rem;
+}
+
+@media only screen and (max-width: 1440px) {
+  .month-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .month-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 .section {
