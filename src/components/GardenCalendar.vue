@@ -145,6 +145,8 @@ function newSection() {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 
   --fit-grid-columns: repeat(12, minmax(0, 1fr));
+  height: auto;
+
 }
 
 .calendar-grid {
@@ -154,6 +156,8 @@ function newSection() {
   text-align: center;
   align-items: stretch;
   width: 100%;
+  height: auto;
+
 }
 
 .months {
@@ -165,6 +169,7 @@ function newSection() {
   position: sticky;
   background: white;
   z-index: 3;
+  height: auto;
 }
 
 @media only screen and (max-width: 1440px) {

@@ -12,7 +12,9 @@
             <i class="pi pi-plus-circle add-section"></i>
         </div>
         </template>
-        <i class="pi pi-trash delete-row" @click="deleteRow(section, row)"></i>
+        <div class="delete">
+          <i class="pi pi-trash delete-row" @click="deleteRow(section, row)"></i>
+        </div>
     </template>
 </template>
 
@@ -78,8 +80,7 @@ const sectionOptions = computed(() => [
   ],
 }])
 
-const toggleTaskOptions = (event: any, i: number) => { taskMenu.value.toggle(event) }
-
+const toggleTaskOptions = (event: any) => { taskMenu.value.toggle(event) }
 
 function deleteRow(section: Section, row: Row) {
   if (section.rows.length == 1) {
@@ -202,11 +203,13 @@ function emptyMonth(row: Row, month: string) {
   justify-content: center;
 }
 
-.delete-row {
-  margin: 1.5em;
+.delete {
+  display: flex;
+  align-items: center;
 }
 
 .delete-row {
+  margin: 1.5em;
   color: #cd6565;
   font-size: 1em;
   cursor: pointer;
