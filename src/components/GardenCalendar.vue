@@ -176,7 +176,7 @@ function newSection() {
   .calendar-grid {
     grid-template-columns: auto repeat(12, 10rem) auto;
     overflow: scroll;
-    height: 80vh;
+    max-height: 80vh;
   }
 
   .months {
@@ -197,7 +197,7 @@ function newSection() {
 .calendar-grid.expanded {
   grid-template-columns: auto repeat(12, max(10vw, 10rem)) auto;
   overflow: scroll;
-  height: 80vh;
+  max-height: 80vh;
 }
 
 .spacer {
