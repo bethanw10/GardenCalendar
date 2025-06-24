@@ -184,4 +184,15 @@ function deleteTask(row: Row, task: Task) {
   justify-content: center;
 }
 
+@media only screen and (max-width: 1440px) {
+  .task-note {
+    font-size: calc(0.5em + 1vmin);
+    /* color: #cd6565; */
+  }
+
+  .edit, .delete {
+    font-size: calc(0.5em + 1vmin);
+  }
+}
+
 </style>

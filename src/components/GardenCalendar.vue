@@ -146,7 +146,6 @@ function newSection() {
 
   --fit-grid-columns: repeat(12, minmax(0, 1fr));
   height: auto;
-
 }
 
 .calendar-grid {
@@ -172,27 +171,14 @@ function newSection() {
   height: auto;
 }
 
-@media only screen and (max-width: 1440px) {
-  .calendar-grid {
-    grid-template-columns: auto repeat(12, 10rem) auto;
-    overflow: scroll;
-    max-height: 80vh;
-  }
 
-  .months {
-    grid-template-columns: repeat(12, 10rem);
-  }
 
-  .spacer {
-    background: transparent !important; 
-  }
-}
-
+/* 
 @media only screen and (max-width: 800) {
   .calendar-grid {
     grid-template-columns: auto repeat(12, 10rem) auto;
   }
-}
+} */
 
 .calendar-grid.expanded {
   grid-template-columns: auto repeat(12, max(10vw, 10rem)) auto;
@@ -247,5 +233,28 @@ function newSection() {
   display: flex;
   justify-content: center;
   gap: 1em;
+}
+
+@media only screen and (max-width: 1440px) {
+  .calendar {
+    margin: 0;
+    padding: 1rem .5rem;
+  }
+
+  .calendar-grid {
+    grid-template-columns: minmax(auto, 8em) repeat(12, 7rem) auto;
+    overflow: scroll;
+    max-height: 80vh;
+    grid-gap: 5px;
+  }
+
+  .months {
+    grid-template-columns: repeat(12, 5rem);
+    grid-gap: 5px;
+  }
+
+  .spacer {
+    background: transparent !important; 
+  }
 }
 </style>

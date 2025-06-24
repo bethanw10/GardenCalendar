@@ -1,7 +1,7 @@
 <template>
     <div class="section-options" :style="sectionNameStyle(section)">
         <Textarea id="section-name" autoResize rows="1" style="resize: none" size="small" type="text"  v-model="section.name"></Textarea>
-        <Button @click="toggleTaskOptions" title="Add Row" text icon="pi pi-ellipsis-v"></Button>
+        <Button @click="toggleTaskOptions" size="small" title="Add Row" text icon="pi pi-ellipsis-v"></Button>
         <Menu ref="taskMenu" id="overlay_menu" :model="sectionOptions" :popup="true" ></Menu>
         <EditSectionDialog :section="section" v-model:visible="showModal" />
     </div>
@@ -183,9 +183,13 @@ function emptyMonth(row: Row, month: string) {
   z-index: 1;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1440px) {
   .section-options {
     position: relative;
+    font-size: calc(0.5em + 1vmin);
+  }
+
+  #section-name { 
     font-size: calc(0.5em + 1vmin);
   }
 }
