@@ -1,8 +1,7 @@
 <template>
-  <div class="calendar">
+  <div class="calendar" v-show="!showMonthList || isDesktop()">
     <div class="calendar-grid" :class="expanded ? 'expanded' : ''">
-      <div class="spacer"> 
-
+      <div class="spacer">
         <!-- <Button rounded 
           @click="expanded = !expanded" 
           :icon="expanded ? 'pi pi-window-minimize': 'pi pi-window-maximize'"
@@ -41,11 +40,20 @@
       </template>
     </div>
 
-    <div class="add-row">
-      <Button label="New Section" @click="newSection" icon="pi pi-plus" severity="primary"></Button>
+    <div class="bottom-options">
+      <div></div>
+      <div class="add-row">
+        <Button label="New Section" size="small" @click="newSection" icon="pi pi-plus" severity="primary"></Button>
+      </div>
+      <div class="to-month-list">
+        <Button @click="showMonthList = true" size="small" v-show="!isDesktop()" label="Month list" icon="pi pi-angle-right" icon-pos="right" outlined severity="primary"></Button>
+      </div>
     </div>
   </div>
-  <Overview :sections="store.calendar" />
+
+  <Button class="back-button" @click="showMonthList = false" size="small" v-show="!isDesktop()" label="Calendar" icon="pi pi-angle-left" icon-pos="left" outlined severity="primary"></Button>
+
+  <Overview v-show="showMonthList || isDesktop()" :sections="store.calendar" />
 </template>
 
 <script setup lang="ts">
@@ -67,6 +75,7 @@ const menu = ref()
 const showImport = ref(false)
 const showExport = ref(false)
 const expanded = ref(false)
+const showMonthList = ref(false)
 const importText = ref("")
 
 const calendarOptions = computed(() => {
@@ -85,7 +94,7 @@ const calendarOptions = computed(() => {
       },
     }]
 
-  if (width.value > 1440) {
+  if (isDesktop()) {
     items.push({
       label: expanded.value ? 'Fit to screen' : 'Expand',
       icon: expanded.value ? 'pi pi-window-minimize': 'pi pi-window-maximize',
@@ -103,6 +112,8 @@ const calendarOptions = computed(() => {
 })
 
 const toggleCalendarOptions = (event: any) => { menu.value.toggle(event) }
+
+const isDesktop = () => { return width.value > 1440 }
 
 async function copyExport() {
   try {
@@ -156,6 +167,7 @@ function newSection() {
   align-items: stretch;
   width: 100%;
   height: auto;
+  background: white;
 
 }
 
@@ -170,8 +182,6 @@ function newSection() {
   z-index: 3;
   height: auto;
 }
-
-
 
 /* 
 @media only screen and (max-width: 800) {
@@ -188,11 +198,11 @@ function newSection() {
 
 .spacer {
   width: 100%;
-  left: 0;
+  /* left: 0; */
   top: 0;
   position: sticky;
   background: white;
-  z-index: 4;
+  z-index: 5;
   display: flex;
   justify-content: start;
 }
@@ -210,13 +220,15 @@ function newSection() {
   position: sticky;
   background: white;
   z-index: 3;
+  display: flex;
+  justify-content: end;
+  padding: .5em .5em 0;
 }
 
 .add-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 1rem 0 0 0;
 }
 
 .add-button {
@@ -235,26 +247,48 @@ function newSection() {
   gap: 1em;
 }
 
+.bottom-options {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0 0 0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.bottom-options > * {
+  flex: 1
+}
+
+.to-month-list {
+  display: flex;
+  justify-content: end;
+}
+
+.back-button {
+  margin: 1em 1em 0 1em;
+}
+
 @media only screen and (max-width: 1440px) {
   .calendar {
     margin: 0;
     padding: 1rem .5rem;
+    max-height: 100vh;
+    background-color: #f1f5f9;
   }
 
   .calendar-grid {
     grid-template-columns: minmax(auto, 8em) repeat(12, 7rem) auto;
     overflow: scroll;
-    max-height: 80vh;
     grid-gap: 5px;
   }
 
   .months {
-    grid-template-columns: repeat(12, 5rem);
+    grid-template-columns: repeat(12, 7rem);
     grid-gap: 5px;
   }
 
-  .spacer {
+  /* .spacer {
     background: transparent !important; 
-  }
+  } */
 }
 </style>
