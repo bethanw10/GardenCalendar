@@ -1,16 +1,16 @@
 <template>
     <div class="section-options" :style="sectionNameStyle(section)">
-        <Textarea id="section-name" autoResize rows="1" style="resize: none" size="small" type="text"  v-model="section.name"></Textarea>
-        <Button @click="toggleTaskOptions" size="small" title="Add Row" text icon="pi pi-ellipsis-v"></Button>
-        <Menu ref="taskMenu" id="overlay_menu" :model="sectionOptions" :popup="true" ></Menu>
-        <EditSectionDialog :section="section" v-model:visible="showModal" />
+      <Textarea id="section-name" autoResize rows="1" style="resize: none" size="small" type="text"  v-model="section.name"></Textarea>
+      <Button @click="toggleTaskOptions" size="small" title="Add Row" text icon="pi pi-ellipsis-v"></Button>
+      <Menu ref="taskMenu" id="overlay_menu" :model="sectionOptions" :popup="true" ></Menu>
+      <EditSectionDialog :section="section" v-model:visible="showModal" />
     </div>
     <template v-for="(row, j) in section.rows" :key="j">
         <template v-for="month in monthNames" :key="month" >
-        <Task v-if="!!taskAtMonth(row, month)" :task="taskAtMonth(row, month)!" :row="row"/>
-        <div v-else-if="emptyMonth(row, month)" @click="newTask(row, month)" class="add-block">
-            <i class="pi pi-plus-circle add-section"></i>
-        </div>
+          <Task v-if="!!taskAtMonth(row, month)" :task="taskAtMonth(row, month)!" :row="row"/>
+          <div v-else-if="emptyMonth(row, month)" @click="newTask(row, month)" class="add-block">
+              <i class="pi pi-plus-circle add-section"></i>
+          </div>
         </template>
         <div class="delete">
           <i class="pi pi-trash delete-row" @click="deleteRow(section, row)"></i>

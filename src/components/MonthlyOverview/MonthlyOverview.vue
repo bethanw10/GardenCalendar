@@ -1,12 +1,13 @@
 <template>
 	<div class="overview">
     <div class="header">
-      
+      <div class="to-month-list">
+      </div>
       <div class="jump-button">
+
         <Button @click="jumpToThisMonth" :disabled="month == currentMonth" label="Today" size="small"  rounded title="Jump to this month"></Button>
       </div>
-      <!-- <ToggleButton v-model="useDetailedView" size="small" onLabel="Detailed" offLabel="Simple" /> -->
-      <!-- <ToggleButton v-model="useDetailedView" size="small" onIcon="pi pi-check" offIcon="pi pi-times" onLabel="" offLabel="" /> -->
+
       <div class="month-nav">
         <div @click="prevMonth()" class="month-arrow"><i class="pi pi-angle-left"></i> </div>
         <p class="month-title">{{ monthNames[month] }}</p>
@@ -32,7 +33,9 @@ import SimpleMonthList from './SimpleMonthList.vue'
 import DetailedMonthList from './DetailedMonthList.vue';
 import Menu from 'primevue/menu';
 import TextMonthList from './TextMonthList.vue';
+import { useWindowSize } from '@vueuse/core'
 
+const { width } = useWindowSize()
 const menu = ref()
 const month = ref(1)
 const useDetailedView = ref("Detailed")
@@ -71,10 +74,11 @@ const options = computed(() => {
     }]
 })
 
+const isDesktop = () => { return width.value > 1440 }
 
 const toggleCalendarOptions = (event: any) => { menu.value.toggle(event) }
 
-const props = defineProps<{ 
+defineProps<{ 
 	sections: Section[];
 }>()
 

@@ -4,7 +4,7 @@
       <template #content>
       <div class="options">
         <DisplayOptions v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" />
-        <Divider layout="vertical" />
+        <!-- <Divider layout="vertical" /> -->
         <div class="checkbox">
           <Checkbox v-model="includeDescriptions"  inputId="include-descriptions" binary />
           <label for="include-descriptions"> Descriptions </label>
@@ -97,9 +97,11 @@ h3 {
 
 .options {
   display: flex;
-  gap: 2em;
+  gap: 1em;
+  row-gap: 1em;
   align-items: stretch;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .checkbox {
