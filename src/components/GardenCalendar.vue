@@ -199,9 +199,11 @@ function newSection() {
 .spacer {
   width: 100%;
   /* left: 0; */
+  /* left: 0; */
   top: 0;
   position: sticky;
   background: white;
+  z-index: 5;
   z-index: 5;
   display: flex;
   justify-content: start;
@@ -220,6 +222,9 @@ function newSection() {
   position: sticky;
   background: white;
   z-index: 3;
+  display: flex;
+  justify-content: end;
+  padding: .5em .5em 0;
   display: flex;
   justify-content: end;
   padding: .5em .5em 0;
@@ -268,6 +273,27 @@ function newSection() {
   margin: 1em 1em 0 1em;
 }
 
+.bottom-options {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0 0 0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.bottom-options > * {
+  flex: 1
+}
+
+.to-month-list {
+  display: flex;
+  justify-content: end;
+}
+
+.back-button {
+  margin: 1em 1em 0 1em;
+}
+
 @media only screen and (max-width: 1440px) {
   .calendar {
     margin: 0;
@@ -283,11 +309,14 @@ function newSection() {
 
   .months {
     grid-template-columns: repeat(12, 7rem);
+    grid-template-columns: repeat(12, 7rem);
     grid-gap: 5px;
   }
 
   /* .spacer {
+  /* .spacer {
     background: transparent !important; 
+  } */
   } */
 }
 </style>
