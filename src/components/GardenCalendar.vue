@@ -317,6 +317,5 @@ function newSection() {
   /* .spacer {
     background: transparent !important; 
   } */
-  } */
 }
 </style>
