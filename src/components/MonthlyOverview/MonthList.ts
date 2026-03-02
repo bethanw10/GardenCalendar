@@ -10,22 +10,25 @@ export function monthRange(task: Task) {
     : `(${startMonth} - ${endMonth})`;
 }
 
-export function sectionsForMonth(sections: Section[], month: number, tagFilter: string[] = [], sortBy: string = "") {
+export function sectionsForMonth(sections: Section[], month: number, tagFilter: string[] = [], sortBy: string = "", checkedFilter: string = "Any") {
   var sections = sections.filter((section) => 
-    section.rows.flatMap(s => s.tasks).some((s) => 
-      s.monthStart <= month &&
-      s.monthEnd >= month)
-    && (tagFilter.length == 0 || section.tags.some(t => tagFilter.includes(t.name))));
+    taskForMonth(section, month, checkedFilter).length > 0 &&
+    (tagFilter.length == 0 || section.tags.some(t => tagFilter.includes(t.name))));
 
-    if (sortBy == "Alphabetically") {
-      sections.sort((a, b) => ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0)))
-    }
+  if (sortBy == "Alphabetically") {
+    sections.sort((a, b) => ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0)))
+  }
 
-    return sections;
+  return sections;
 }
 
-export function taskForMonth(section: Section, month: number) {
-  return section.rows.flatMap(s => s.tasks).filter((s) =>
-      s.monthStart <= month &&
-      s.monthEnd >= month);
+export function taskForMonth(section: Section, month: number, checkedFilter: string = "Any") {
+  return section.rows.flatMap(s => s.tasks).filter((s) => {
+    const isCorrectMonth = s.monthStart <= month && s.monthEnd >= month;
+    const passesCheckFilter = checkedFilter == "Any" || 
+      checkedFilter == "Checked" && s.checked || 
+      checkedFilter == "Unchecked" && !s.checked;
+
+    return isCorrectMonth && passesCheckFilter;
+  });
 }

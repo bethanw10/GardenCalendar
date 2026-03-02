@@ -4,7 +4,6 @@
       <div class="to-month-list">
       </div>
       <div class="jump-button">
-
         <Button @click="jumpToThisMonth" :disabled="month == currentMonth" label="Today" size="small"  rounded title="Jump to this month"></Button>
       </div>
 
@@ -19,9 +18,7 @@
       </div>
       
     </div>
-    <DetailedMonthList v-if="useDetailedView == 'Detailed'" :sections="sections" :month="month" />
-    <SimpleMonthList v-if="useDetailedView == 'Simple'" :sections="sections" :month="month" />
-    <TextMonthList v-if="useDetailedView == 'Text'" :sections="sections" :month="month" />
+    <component :is="viewType" :sections="sections" :month="month" />
   </div>
 </template>
 
@@ -89,6 +86,20 @@ onMounted(() => {
 const currentMonth = computed(() => {
   const date = new Date();
   return date.getMonth();
+})
+
+const viewType = computed(() => {
+
+switch (useDetailedView.value) {
+  case "Simple":
+    return SimpleMonthList;
+  case "Detailed":
+    return DetailedMonthList;
+  case "Text":
+    return TextMonthList;
+  default:
+   return DetailedMonthList;
+  }
 })
 
 function prevMonth() {

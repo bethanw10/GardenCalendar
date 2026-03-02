@@ -46,12 +46,17 @@
         <Button label="New Section" size="small" @click="newSection" icon="pi pi-plus" severity="primary"></Button>
       </div>
       <div class="to-month-list">
-        <Button @click="showMonthList = true" size="small" label="Monthly Summary" icon="pi pi-angle-right" icon-pos="right" outlined severity="primary"></Button>
+        <Button @click="showMonthList = true" size="small" label="Monthly Summarys" icon="pi pi-angle-right" icon-pos="right" outlined severity="primary"></Button>
       </div>
     </div>
   </div>
 
-  <Button class="back-button" @click="showMonthList = false" size="small" v-show="showMonthList" label="Calendar" icon="pi pi-angle-left" icon-pos="left" outlined severity="primary"></Button>
+  <Button class="back-button" 
+    @click="showMonthList = false" 
+    v-show="showMonthList" 
+    label="Calendar" 
+    icon="pi pi-angle-left" 
+    icon-pos="left" outlined severity="primary"></Button>
   <Overview v-show="showMonthList" :sections="store.calendar" />
 </template>
 
@@ -284,7 +289,6 @@ function newSection() {
 .bottom-options > * {
   flex: 1
 }
-
 .to-month-list {
   display: flex;
   justify-content: end;
@@ -292,18 +296,7 @@ function newSection() {
 
 .back-button {
   margin: 1em 1em 0 1em;
-}
-
-.bottom-options {
-  display: flex;
-  align-items: center;
-  margin: 1rem 0 0 0;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.bottom-options > * {
-  flex: 1
+  position: absolute;
 }
 
 .to-month-list {
@@ -333,6 +326,10 @@ function newSection() {
     grid-template-columns: repeat(12, 7rem);
     grid-template-columns: repeat(12, 7rem);
     grid-gap: 5px;
+  }
+    
+  .back-button {
+    position: relative;
   }
 
   /* .spacer {

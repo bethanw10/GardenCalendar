@@ -4,4 +4,5 @@ interface Task {
     description: string;
     monthStart: number;
     monthEnd: number;
+    checked: boolean;
 }

@@ -7,7 +7,12 @@
 
 		<FloatLabel variant="in">
 			<MultiSelect id="filter" v-model="tagFilter" :options="allTags" filter />
-			<label for="filter">Filter by</label>
+			<label for="filter">Tags</label>
+		</FloatLabel>
+
+		<FloatLabel variant="in">
+			<Select id="filter" v-model="checkedFilter" :options="checkedOptions"> </Select>
+			<label for="filter">Checked</label>
 		</FloatLabel>
 	</div>
 </template>
@@ -20,10 +25,11 @@ import { computed } from 'vue';
 
 const store = useCalendarStore()
 const sortOptions = ["Calendar order", "Alphabetically"]
+const checkedOptions = ["Any", "Checked", "Unchecked"]
 
 const tagFilter = defineModel<string[]>('tagFilter', { default: [], required: false })
 const sortBy = defineModel<string>('sortBy', { default: "Calendar order", required: false })
-
+const checkedFilter = defineModel<string>('checkedFilter', { default: "Any", required: false })
 const allTags = computed(() => {
   return store.distinctTagNames;
 });
