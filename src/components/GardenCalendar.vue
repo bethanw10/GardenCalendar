@@ -1,4 +1,5 @@
 <template>
+  <GoogleLoginButton />
   <div class="calendar" v-show="!showMonthList">
     <div class="calendar-grid" :class="expanded ? 'expanded' : ''">
       <div class="spacer">
@@ -64,6 +65,7 @@ import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
 import Menu from 'primevue/menu';
 import Button from 'primevue/button';
+import GoogleLoginButton from './GoogleLoginButton.vue'
 import Section from './Section.vue'
 import Overview from "./MonthlyOverview/MonthlyOverview.vue"
 import { useWindowSize } from '@vueuse/core'

@@ -13,6 +13,7 @@
   "dependencies": {
     "@primeuix/themes": "^1.1.1",
     "@vueuse/core": "^13.3.0",
+    "firebase": "^12.10.0",
     "pinia": "^2.1.7",
     "primeicons": "^7.0.0",
     "primevue": "^4.0.4",
@@ -27,7 +28,6 @@
     "npm-run-all2": "^6.1.2",
     "typescript": "~5.4.0",
     "vite": "^5.2.8",
-    "vite-plugin-vue-devtools": "^7.0.25",
     "vue-tsc": "^2.0.11"
   }
 }
