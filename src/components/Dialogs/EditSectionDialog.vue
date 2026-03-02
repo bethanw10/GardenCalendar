@@ -70,11 +70,6 @@ function addTag(section: Section) {
     section.tags.push({name: newTagText.value})
 	newTagText.value = "";
 }
-
-function removeTag(section:Section, tag:Tag) {
-    const index = section.tags.indexOf(tag);
-    section.tags.splice(index, 1);
-}
 </script>
 
 <style>

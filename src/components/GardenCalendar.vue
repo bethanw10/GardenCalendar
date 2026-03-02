@@ -1,5 +1,4 @@
 <template>
-  <GoogleLoginButton />
   <div class="calendar" v-show="!showMonthList">
     <div class="calendar-grid" :class="expanded ? 'expanded' : ''">
       <div class="spacer">
@@ -21,14 +20,14 @@
         
         <Menu ref="menu" id="overlay_menu" :model="calendarOptions" :popup="true" ></Menu>
         <Dialog v-model:visible="showImport" maximizable modal header="Import" class="edit-dialog" >
-          <Textarea v-model="importText" rows="10" cols="100" style="resize: none" ></Textarea>
+          <Textarea v-model="importText" rows="10" cols="100" fluid style="max-width: 100%;"></Textarea>
           <div class="export-buttons">
             <Button label="Load" @click="importCalendar"></Button>
             <Button label="Close" severity="secondary" @click="showImport = false"></Button>
           </div>
         </Dialog>
         <Dialog v-model:visible="showExport" maximizable modal header="Export" class="edit-dialog" >
-          <Textarea :modelValue="store.calendarJson" readonly rows="10" cols="100" style="resize: none" ></Textarea>
+          <Textarea :modelValue="store.calendarJson" readonly rows="10" cols="100" fluid style="max-width: 100%;"></Textarea>
           <div class="export-buttons">
             <Button label="Copy" @click="copyExport"></Button>
             <Button label="Close" severity="secondary" @click="showExport = false"></Button>
@@ -47,7 +46,7 @@
         <Button label="New Section" size="small" @click="newSection" icon="pi pi-plus" severity="primary"></Button>
       </div>
       <div class="to-month-list">
-        <Button @click="showMonthList = true" size="small" label="Tasks" icon="pi pi-angle-right" icon-pos="right" outlined severity="primary"></Button>
+        <Button @click="showMonthList = true" size="small" label="Monthly Summary" icon="pi pi-angle-right" icon-pos="right" outlined severity="primary"></Button>
       </div>
     </div>
   </div>
@@ -65,10 +64,13 @@ import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
 import Menu from 'primevue/menu';
 import Button from 'primevue/button';
-import GoogleLoginButton from './GoogleLoginButton.vue'
+import { auth } from '@/firebase'
+import { signOutUser } from '@/firebase'
+import { useRouter } from 'vue-router'
 import Section from './Section.vue'
 import Overview from "./MonthlyOverview/MonthlyOverview.vue"
 import { useWindowSize } from '@vueuse/core'
+import { Fluid } from "primevue";
 
 const { width } = useWindowSize()
 const store = useCalendarStore()
@@ -78,6 +80,8 @@ const showExport = ref(false)
 const expanded = ref(false)
 const showMonthList = ref(false)
 const importText = ref("")
+
+const router = useRouter()
 
 const calendarOptions = computed(() => {
   var items = [{
@@ -102,6 +106,21 @@ const calendarOptions = computed(() => {
       command: (e : any) => {
         expanded.value = !expanded.value 
       },
+    })
+  }
+
+  if (auth.currentUser) {
+    items.push({
+      label: 'Sign out',
+      icon: 'pi pi-sign-out',
+      command: async () => {
+        try {
+          await signOutUser()
+          router.push({ name: 'login' })
+        } catch (e) {
+          console.error('sign out failed', e)
+        }
+      }
     })
   }
 
@@ -155,7 +174,7 @@ function newSection() {
   max-height: calc(100vh - 2rem);
 
   /* border: 1px solid #ccc; */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); */
 
   --fit-grid-columns: repeat(12, minmax(0, 1fr));
   /* height: auto; */
@@ -301,6 +320,7 @@ function newSection() {
     margin: 0;
     padding: 0;
     background-color: #f1f5f9;
+    max-height: 100dvh;
   }
 
   .calendar-grid {

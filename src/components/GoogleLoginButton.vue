@@ -4,14 +4,8 @@
     label="Sign in with Google"
     icon="pi pi-google"
     @click="login"
-  />
-  <Button
-    v-else
-    label="Sign out"
-    icon="pi pi-sign-out"
-    severity="danger"
-    @click="logout"
-  />
+  ></Button>
+  <!-- when logged in the sign-out action will live in the options menu -->
 </template>
 
 <script setup lang="ts">
@@ -36,15 +30,7 @@ async function login() {
   }
 }
 
-async function logout() {
-  try {
-    await signOutUser()
-  } catch (e) {
-    console.error('sign out failed', e)
-  }
-}
 </script>
 
 <style scoped>
-/* minimal styling, PrimeVue handles the button style */
 </style>

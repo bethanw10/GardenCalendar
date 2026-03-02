@@ -3,7 +3,7 @@
     <DisplayOptions class="options" v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" />
 
     <div v-for="(section, i) in sectionsForMonth(sections, month, tagFilter, sortBy)" :key="section.name + i" >
-      <EditSectionDialog v-model:visible="visible[i]" :section="section"></EditSectionDialog>
+      <EditSectionDialog :visible="isVisible(i)" @update:visible="visible[i] = $event" :section="section"></EditSectionDialog>
 
       <h3>
         <span class="section-name">{{ section.name }} </span>
@@ -50,10 +50,7 @@ defineProps<{
 	month: number;
 }>()
 
-const allTags = computed(() => {
-  return store.distinctTagNames;
-});
-
+const isVisible = (i: any) => { return visible.value[i] || false }
 
 </script>
 

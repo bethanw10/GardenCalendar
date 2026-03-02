@@ -15,6 +15,9 @@ export function setupCalendarSync() {
       } catch (err) {
         console.error('failed to load remote calendar', err)
       }
+    } else {
+      // signed out or switching accounts – clear local calendar
+      calendarStore.calendarState = []
     }
   })
 
