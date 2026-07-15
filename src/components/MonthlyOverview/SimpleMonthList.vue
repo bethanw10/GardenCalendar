@@ -1,9 +1,9 @@
 <template>
-  <DisplayOptions class="options" v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" />
+  <DisplayOptions class="options" v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" v-model:checkedFilter="checkedFilter" />
 
 	<div class="month-list">
 
-		<div class="section" v-for="(section, i) in sectionsForMonth(sections, month, tagFilter, sortBy)" :key="section.name + i" >
+		<div class="section" v-for="(section, i) in sectionsForMonth(sections, month, tagFilter, sortBy, checkedFilter)" :key="section.name + i" >
 			<Panel class="section-task" :header="section.name">
 				<template #header>
           <div class="header">
@@ -15,7 +15,7 @@
 				</template>
 				<EditSectionDialog v-model:visible="visible[i]" :section="section"></EditSectionDialog>
 				<div>
-					<div v-for="task in taskForMonth(section, month)" class="section-list-item" >
+					<div v-for="task in taskForMonth(section, month, checkedFilter)" class="section-list-item" >
             <Checkbox v-model="task.checked" binary />
             <span class="task-note">{{ task.note }} </span>
             <Tag class="month-range" rounded severity="secondary">
@@ -41,6 +41,7 @@ import Checkbox from 'primevue/checkbox';
 const visible : Ref<boolean[]> = ref([])
 const sortBy = ref<string>("Calendar order")
 const tagFilter = ref<string[]>([])
+const checkedFilter = ref<string>("Any")
 
 let props = defineProps<{
 	sections: Section[];

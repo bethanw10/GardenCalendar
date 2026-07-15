@@ -47,40 +47,54 @@ const includeDescriptions = ref(true)
 const includeMonths = ref(true)
 
 const plainTextList = computed(() => {
-  var text = "";
+  const lines: string[] = [];
 
-  var sections = props.sections.filter((section) => 
-    section.rows.flatMap(s => s.tasks).some((s) => 
-      s.monthStart <= props.month && 
-      s.monthEnd >= props.month));
+  const sections = props.sections.filter((section) => {
+    const tasks = section.rows.flatMap(s => s.tasks).filter((task) =>
+      task.monthStart <= props.month &&
+      task.monthEnd >= props.month &&
+      (checkedFilter.value === 'Any' || (checkedFilter.value === 'Checked' && task.checked) || (checkedFilter.value === 'Unchecked' && !task.checked)));
 
-  for (var section of sections) {
-    text += section.name + ':\n';
+    if (tasks.length === 0) {
+      return false;
+    }
 
-    var tasks = section.rows.flatMap(s => s.tasks).filter((s) =>
-    s.monthStart <= props.month && 
-    s.monthEnd >= props.month &&
-    (checkedFilter.value === 'Any' || (checkedFilter.value === 'Checked' && s.checked) || (checkedFilter.value === 'Unchecked' && !s.checked)));
+    if (tagFilter.value.length > 0 && !section.tags.some(t => tagFilter.value.includes(t.name))) {
+      return false;
+    }
 
-      for (var task of tasks) {
-        text += '- ' + task.note;
-        if (includeMonths.value) {
-          text += ' ' + monthRange(task)
-        }
+    return true;
+  });
 
-        // text += '\n'
+  for (const section of sections) {
+    const tasks = section.rows.flatMap(s => s.tasks).filter((task) =>
+      task.monthStart <= props.month &&
+      task.monthEnd >= props.month &&
+      (checkedFilter.value === 'Any' || (checkedFilter.value === 'Checked' && task.checked) || (checkedFilter.value === 'Unchecked' && !task.checked)));
 
-        if (includeDescriptions.value && task.description) {
-          text += '\n' + task.description + '\n'
-        }
+    if (tasks.length === 0) {
+      continue;
+    }
 
-        text += '\n'
+    lines.push(section.name + ':');
+
+    for (const task of tasks) {
+      let line = '- ' + task.note;
+      if (includeMonths.value) {
+        line += ' ' + monthRange(task);
       }
-      
-      text += '\n'
+
+      lines.push(line);
+
+      if (includeDescriptions.value && task.description) {
+        lines.push(task.description);
+      }
+    }
+
+    lines.push('');
   }
 
-  return text.trimEnd();
+  return lines.join('\n').trimEnd();
 });
 
 async function copy() {
