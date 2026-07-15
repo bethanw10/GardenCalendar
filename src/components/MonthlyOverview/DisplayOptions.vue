@@ -41,6 +41,7 @@ const allTags = computed(() => {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1em;
+	justify-content: center;
 }
 
 </style>
