@@ -83,7 +83,7 @@ const menu = ref()
 const showImport = ref(false)
 const showExport = ref(false)
 const expanded = ref(false)
-const showMonthList = ref(false)
+const showMonthList = ref(true)
 const importText = ref("")
 
 const router = useRouter()

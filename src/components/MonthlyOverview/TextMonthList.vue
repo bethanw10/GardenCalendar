@@ -3,7 +3,7 @@
     <Card>
       <template #content>
       <div class="options">
-        <DisplayOptions v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" />
+        <DisplayOptions v-model:sortBy="sortBy" v-model:tagFilter="tagFilter" v-model:checkedFilter="checkedFilter" />
         <!-- <Divider layout="vertical" /> -->
         <div class="checkbox">
           <Checkbox v-model="includeDescriptions"  inputId="include-descriptions" binary />
@@ -42,6 +42,7 @@ const props = defineProps<{
 
 const sortBy = ref<string>("Calendar order")
 const tagFilter = ref<string[]>([])
+const checkedFilter = ref<string>("Any")
 const includeDescriptions = ref(true)
 const includeMonths = ref(true)
 
@@ -57,8 +58,9 @@ const plainTextList = computed(() => {
     text += section.name + ':\n';
 
     var tasks = section.rows.flatMap(s => s.tasks).filter((s) =>
-      s.monthStart <= props.month && 
-      s.monthEnd >= props.month);
+    s.monthStart <= props.month && 
+    s.monthEnd >= props.month &&
+    (checkedFilter.value === 'Any' || (checkedFilter.value === 'Checked' && s.checked) || (checkedFilter.value === 'Unchecked' && !s.checked)));
 
       for (var task of tasks) {
         text += '- ' + task.note;

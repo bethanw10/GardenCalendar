@@ -14,16 +14,15 @@
           </div>
 				</template>
 				<EditSectionDialog v-model:visible="visible[i]" :section="section"></EditSectionDialog>
-				<ul>
-					<li v-for="task in taskForMonth(section, month)" class="section-list-item" >
-						<p>
-							<span class="task-note">{{ task.note }} </span>
-							<Tag class="month-range" rounded severity="secondary">
-								{{ monthRange(task) }}
-							</Tag>
-						</p>
-					</li>
-				</ul>
+				<div>
+					<div v-for="task in taskForMonth(section, month)" class="section-list-item" >
+            <Checkbox v-model="task.checked" binary />
+            <span class="task-note">{{ task.note }} </span>
+            <Tag class="month-range" rounded severity="secondary">
+              {{ monthRange(task) }}
+            </Tag>
+					</div>
+				</div>
 			</Panel>
 		</div>
 	</div>
@@ -37,6 +36,7 @@ import { onMounted, ref, type Ref } from 'vue';
 import { monthRange, sectionsForMonth, taskForMonth } from './MonthList'
 import DisplayOptions from './DisplayOptions.vue'
 import Button from 'primevue/button';
+import Checkbox from 'primevue/checkbox';
 
 const visible : Ref<boolean[]> = ref([])
 const sortBy = ref<string>("Calendar order")
@@ -132,12 +132,17 @@ h3 {
   min-height: 100vh;
 }
 
+.section-list-item {
+  display: flex;
+  align-items: center;
+}
+
 .section-task {
   height: 100%;
 }
 
 .task-note {
-	margin-right: 0.5rem;
+	margin: 0 0.5em 0 1rem;
 }
 
 .tag-list {

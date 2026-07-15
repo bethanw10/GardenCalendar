@@ -4,7 +4,7 @@
 			<div class="text-fields">
 				<IftaLabel >
 					<label for="section_name">Name</label>
-					<inputText id="section_name" fluid v-model="section.name" placeholder="Section Name" />
+					<inputText id="section_name" fluid v-model="sectionName" placeholder="Section Name" />
 				</IftaLabel>
 				<Fieldset legend="Tags" >
 					<div class="tags-section">
@@ -16,7 +16,7 @@
 							</InputGroupAddon>
 						</InputGroup>
 
-						<MultiSelect v-model="tagNames" @change="updateTags" :options="allTags" filter placeholder="Add existing tag"/>
+						<MultiSelect :model-value="tagNames" @change="updateTags" :options="allTags" filter placeholder="Add existing tag"/>
 
 						<!-- <div v-if="section.tags.length > 0" class="tag-list">
 							<template v-for="tag in section.tags">
@@ -26,7 +26,7 @@
 					</div>
 				</Fieldset>				
 			</div>			
-			<Button type="submit" label="Done" @click="visible = false"></Button>
+			<Button type="submit" label="Done" @click="save"></Button>
 		</div>
 	</Dialog>
 </template>
@@ -40,7 +40,7 @@ import InputGroupAddon from 'primevue/inputgroupaddon';
 import Fieldset from 'primevue/fieldset';
 import Button from 'primevue/button';
 import { MultiSelect } from 'primevue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useCalendarStore } from '@/stores/Calendar';
 
 const props = defineProps<{ 
@@ -49,7 +49,12 @@ const props = defineProps<{
 
 const store = useCalendarStore()
 const newTagText = ref("")
+const sectionName = ref(props.section.name)
 const visible = defineModel<boolean>('visible', { required: true })
+
+watch(() => props.section.name, (newName) => {
+	sectionName.value = newName;
+});
 
 const allTags = computed(() => {
     return store.distinctTagNames;
@@ -69,6 +74,11 @@ function updateTags(event: any) {
 function addTag(section: Section) {
     section.tags.push({name: newTagText.value})
 	newTagText.value = "";
+}
+
+function save() {
+	props.section.name = sectionName.value;
+	visible.value = false;
 }
 </script>
 
