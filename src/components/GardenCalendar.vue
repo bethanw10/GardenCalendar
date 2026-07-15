@@ -176,7 +176,7 @@ function newSection() {
   margin: 1rem;
   padding: 1rem;
   border-radius: 8px;
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
 
   /* border: 1px solid #ccc; */
   /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); */

@@ -39,6 +39,8 @@ const allTags = computed(() => {
 <style scoped>
 .filters {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 1em;
 }
+
 </style>
